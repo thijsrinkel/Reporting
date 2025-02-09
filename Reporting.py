@@ -8,10 +8,44 @@ def generate_pdf(values, pdf_output_path):
     """Generate a PDF with filled details."""
     pdf_buffer = BytesIO()
     c = canvas.Canvas(pdf_buffer, pagesize=A4)
-    c.drawString(100, 800, "Caisson Report")
-    c.drawString(100, 780, f"Date: {values['date']}")
-    c.drawString(100, 760, f"Location: {values['location']}")
-    c.drawString(100, 740, f"Operator: {values['operator']}")
+    
+    # Title
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(100, 800, "Survey Installation and Calibration Report")
+    
+    # Project Details
+    c.setFont("Helvetica", 12)
+    c.drawString(100, 780, f"Project Name: EPCI Energy Island for MOG2 Project")
+    c.drawString(100, 760, f"Caisson Number: {values['caisson_number']}")
+    c.drawString(100, 740, f"Date: {values['date']}")
+    c.drawString(100, 720, f"Location: {values['location']}")
+    c.drawString(100, 700, f"Operator: {values['operator']}")
+    
+    # Report Sections
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(100, 670, "Scope of Document")
+    c.setFont("Helvetica", 12)
+    c.drawString(100, 650, "This document presents a summary of the survey operations, installations,")
+    c.drawString(100, 635, "and calibrations acquired for Caisson XX as part of the EPCI Energy Island Project.")
+    
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(100, 600, "Survey System Setup")
+    c.setFont("Helvetica", 12)
+    c.drawString(100, 580, "- Equipment installed on Caisson XX")
+    c.drawString(100, 565, "- Software used during installation and calibrations")
+    c.drawString(100, 550, "- Survey System Calibrations and Verifications")
+    
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(100, 520, "Position Verifications")
+    c.setFont("Helvetica", 12)
+    c.drawString(100, 500, "After installation and calibration, a position verification was performed to")
+    c.drawString(100, 485, "ensure correct functionality and accuracy of the CCSC Survey Systems.")
+    
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(100, 450, "CCSC Survey Systems Health Check")
+    c.setFont("Helvetica", 12)
+    c.drawString(100, 430, "A system integrity check was performed to validate correct DGNSS antenna offsets.")
+    
     c.save()
     
     with open(pdf_output_path, "wb") as f:
@@ -32,9 +66,10 @@ def merge_pdfs(main_pdf, annex_pdfs, output_pdf):
 st.title("Caisson Report Generator")
 st.write("Fill in the details and upload annexes to generate the final report.")
 
-# Dynamic form fields (Example fields)
+# Dynamic form fields
 st.sidebar.header("Enter Report Details")
 values = {
+    "caisson_number": st.sidebar.text_input("Caisson Number"),
     "date": st.sidebar.text_input("Date"),
     "location": st.sidebar.text_input("Location"),
     "operator": st.sidebar.text_input("Operator"),
