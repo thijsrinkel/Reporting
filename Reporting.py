@@ -8,12 +8,13 @@ def extract_placeholders(doc_path):
     """Extract placeholders from a Word document."""
     doc = docx.Document(doc_path)
     placeholders = set()
-    pattern = re.compile(r'\{(.*?)\}')
+    pattern = re.compile(r'\{(.*?)\}')  # Match {placeholder}
     
     for para in doc.paragraphs:
         matches = pattern.findall(para.text)
         placeholders.update(matches)
     
+    st.write("**Detected Placeholders:**", placeholders)  # Debugging output in Streamlit
     return list(placeholders)
 
 def replace_placeholders(doc_path, values):
@@ -63,7 +64,7 @@ if template_file:
         for ph in placeholders:
             values[ph] = st.sidebar.text_input(f"{ph}")
     else:
-        st.warning("No placeholders found in the uploaded document.")
+        st.warning("No placeholders found in the uploaded document. Make sure placeholders are enclosed in {}.")
     
     # Upload annex PDFs
     annex_files = st.file_uploader("Upload Annex PDFs", type=["pdf"], accept_multiple_files=True)
