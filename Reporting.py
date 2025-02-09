@@ -51,20 +51,25 @@ st.write("Fill in the details and upload annexes to generate the final report.")
 # Upload template
 template_file = st.file_uploader("Upload Word template (DOCX)", type=["docx"])
 
+values = {}
 if template_file:
     docx_path = "temp_template.docx"
     with open(docx_path, "wb") as f:
         f.write(template_file.read())
     
     placeholders = extract_placeholders(docx_path)
-    st.sidebar.header("Enter Report Details")
-    values = {ph: st.sidebar.text_input(f"{ph}") for ph in placeholders}
+    if placeholders:
+        st.sidebar.header("Enter Report Details")
+        for ph in placeholders:
+            values[ph] = st.sidebar.text_input(f"{ph}")
+    else:
+        st.warning("No placeholders found in the uploaded document.")
     
     # Upload annex PDFs
     annex_files = st.file_uploader("Upload Annex PDFs", type=["pdf"], accept_multiple_files=True)
     
     # Generate button
-    if st.button("Generate Report"):
+    if st.button("Generate Report") and values:
         filled_docx = replace_placeholders(docx_path, values)
         pdf_report = "final_report.pdf"
         convert_docx_to_pdf(filled_docx, pdf_report)
