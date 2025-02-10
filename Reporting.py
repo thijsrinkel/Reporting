@@ -18,11 +18,12 @@ def convert_docx_to_pdf(docx_path, pdf_output_path):
     with open(html_path, "w") as html_file:
         html_file.write(html_content)
 
-    # Specify the path for wkhtmltopdf
+    # Explicitly set the path for wkhtmltopdf
     config = pdfkit.configuration(wkhtmltopdf="/usr/bin/wkhtmltopdf")
 
     pdfkit.from_file(html_path, pdf_path, configuration=config)
     return pdf_path
+
 
 def extract_placeholders(doc_path):
     """Extract placeholders from a Word document."""
