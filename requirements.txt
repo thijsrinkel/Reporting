@@ -3,4 +3,5 @@ reportlab
 streamlit
 python-docx
 pdfkit
+pandoc
 
