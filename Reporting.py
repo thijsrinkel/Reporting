@@ -3,6 +3,8 @@ import fitz  # PyMuPDF for PDF handling
 import docx
 import re
 from io import BytesIO
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
 
 def extract_placeholders(doc_path):
     """Extract placeholders from a Word document."""
@@ -30,9 +32,19 @@ def replace_placeholders(doc_path, values):
     return output_path
 
 def convert_docx_to_pdf(docx_path, pdf_output_path):
-    """Convert a Word document to PDF."""
-    import subprocess
-    subprocess.run(["libreoffice", "--headless", "--convert-to", "pdf", docx_path])
+    """Convert a Word document to PDF using ReportLab."""
+    doc = docx.Document(docx_path)
+    pdf_buffer = BytesIO()
+    c = canvas.Canvas(pdf_buffer, pagesize=A4)
+    y_position = 800
+    
+    for para in doc.paragraphs:
+        c.drawString(100, y_position, para.text)
+        y_position -= 20  # Move down for the next line
+    
+    c.save()
+    with open(pdf_output_path, "wb") as f:
+        f.write(pdf_buffer.getvalue())
     return pdf_output_path
 
 def merge_pdfs(main_pdf, annex_pdfs, output_pdf):
