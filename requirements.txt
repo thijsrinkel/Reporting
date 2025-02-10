@@ -2,4 +2,4 @@ pymupdf
 reportlab
 streamlit
 python-docx
-libreoffice
+
