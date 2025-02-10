@@ -2,6 +2,7 @@ import streamlit as st
 import fitz  # PyMuPDF for PDF handling
 import docx
 import re
+import mammoth
 import pdfkit
 from io import BytesIO
 
@@ -31,15 +32,17 @@ def replace_placeholders(doc_path, values):
     return output_path
 
 def convert_docx_to_pdf(docx_path, pdf_output_path):
-    """Convert a Word document to PDF using pdfkit and wkhtmltopdf."""
-    import subprocess
+    """Convert a Word document to PDF using Mammoth and pdfkit."""
+    with open(docx_path, "rb") as docx_file:
+        result = mammoth.convert_to_html(docx_file)
+        html_content = result.value
+    
     html_path = docx_path.replace(".docx", ".html")
     pdf_path = docx_path.replace(".docx", ".pdf")
     
-    # Convert DOCX to HTML
-    subprocess.run(["pandoc", docx_path, "-o", html_path])
+    with open(html_path, "w") as html_file:
+        html_file.write(html_content)
     
-    # Convert HTML to PDF
     pdfkit.from_file(html_path, pdf_path)
     return pdf_path
 
