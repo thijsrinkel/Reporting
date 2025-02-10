@@ -6,6 +6,27 @@ import mammoth
 import pdfkit
 from io import BytesIO
 
+def convert_docx_to_pdf(docx_path, pdf_output_path):
+    """Convert a Word document to PDF using Mammoth and pdfkit."""
+    import mammoth
+
+    with open(docx_path, "rb") as docx_file:
+        result = mammoth.convert_to_html(docx_file)
+        html_content = result.value
+
+    html_path = docx_path.replace(".docx", ".html")
+    pdf_path = docx_path.replace(".docx", ".pdf")
+
+    with open(html_path, "w") as html_file:
+        html_file.write(html_content)
+
+    # Specify the path for wkhtmltopdf
+    config = pdfkit.configuration(wkhtmltopdf="/usr/bin/wkhtmltopdf")
+
+    pdfkit.from_file(html_path, pdf_path, configuration=config)
+    return pdf_path
+
+
 def extract_placeholders(doc_path):
     """Extract placeholders from a Word document."""
     doc = docx.Document(doc_path)
