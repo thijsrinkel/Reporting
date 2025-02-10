@@ -8,8 +8,6 @@ from io import BytesIO
 
 def convert_docx_to_pdf(docx_path, pdf_output_path):
     """Convert a Word document to PDF using Mammoth and pdfkit."""
-    import mammoth
-
     with open(docx_path, "rb") as docx_file:
         result = mammoth.convert_to_html(docx_file)
         html_content = result.value
@@ -25,7 +23,6 @@ def convert_docx_to_pdf(docx_path, pdf_output_path):
 
     pdfkit.from_file(html_path, pdf_path, configuration=config)
     return pdf_path
-
 
 def extract_placeholders(doc_path):
     """Extract placeholders from a Word document."""
@@ -51,21 +48,6 @@ def replace_placeholders(doc_path, values):
     output_path = "filled_template.docx"
     doc.save(output_path)
     return output_path
-
-def convert_docx_to_pdf(docx_path, pdf_output_path):
-    """Convert a Word document to PDF using Mammoth and pdfkit."""
-    with open(docx_path, "rb") as docx_file:
-        result = mammoth.convert_to_html(docx_file)
-        html_content = result.value
-    
-    html_path = docx_path.replace(".docx", ".html")
-    pdf_path = docx_path.replace(".docx", ".pdf")
-    
-    with open(html_path, "w") as html_file:
-        html_file.write(html_content)
-    
-    pdfkit.from_file(html_path, pdf_path)
-    return pdf_path
 
 def merge_pdfs(main_pdf, annex_pdfs, output_pdf):
     """Merge the main report PDF with annex PDFs."""
@@ -105,7 +87,7 @@ if template_file:
     if st.button("Generate Report") and values:
         filled_docx = replace_placeholders(docx_path, values)
         pdf_report = "final_report.pdf"
-        convert_docx_to_pdf(filled_docx, pdf_report)
+        pdf_report = convert_docx_to_pdf(filled_docx, pdf_report)  # Ensure variable is updated
         
         annex_paths = []
         for annex in annex_files:
